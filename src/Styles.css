@@ -1,21 +1,16 @@
-/* styles.css */
-
+ 
 :root {
-  --bg-gradient-start: #4facfe;
-  --bg-gradient-end: #00f2fe;
-
-  --card-bg: rgba(255, 255, 255, 0.15);
-  --card-bg-light: rgba(255, 255, 255, 0.8);
-
-  --text-main: #ffffff;
-  --text-secondary: #e0e0e0;
-  --text-error: #ff6b6b;
-
-  --button-bg: rgba(255, 255, 255, 0.3);
-  --button-bg-hover: rgba(255, 255, 255, 0.5);
-  --button-text: #ffffff;
-
-  --shadow-color: rgba(0, 0, 0, 0.3);
+    --bg-gradient-start: #4facfe;
+    --bg-gradient-end: #00f2fe;
+    --card-bg: rgba(255, 255, 255, 0.15);
+    --card-bg-light: rgba(255, 255, 255, 0.8);
+    --text-main: #1d364f;
+    --text-secondary: #000000;
+    --text-error: #ff6b6b;
+    --button-bg: rgb(167 139 139 / 30%);
+    --button-bg-hover: rgba(255, 255, 255, 0.5);
+    --button-text: #272020b8;
+    --shadow-color: rgba(0, 0, 0, 0.3);
 }
 
 body {
@@ -99,7 +94,7 @@ body {
 
 .forecast-cards {
   display: flex;
-  overflow-x: auto;
+  overflow-x: hidden;
   gap: 12px;
   padding-bottom: 10px;
 }
@@ -156,24 +151,8 @@ body {
 .loading-message {
   margin-top: 20px;
   text-align: center;
-}
-
-/* ensure weather-card class is used for styling consistent card in Search too */
-.weather-card {
-  background-color: var(--card-bg);
-  border-radius: 16px;
-  box-shadow: 0 6px 20px var(--shadow-color);
-  padding: 30px 20px;
-  margin-top: 30px;
-  text-align: center;
-}
-
-.forecast-container {
-  margin-top: 40px;
-}
-
-/* forecast-title, forecast-cards, detail-item etc already defined earlier */
-/* styles.css additions for ForecastCard */
+}  
+  
 
 .forecast-card {
   flex: 1 1 0;
