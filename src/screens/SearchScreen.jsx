@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import WeatherIcon from '../Components/WeatherIcon';
-import ForecastCard from '../Components/ForecastCard';
+import React, { useState } from "react";
+import WeatherIcon from "../Components/WeatherIcon";
+import ForecastCard from "../Components/ForecastCard";
+import "../Styles.css";
 
 export default function SearchScreen({ onBack }) {
-  const [cityInput, setCityInput] = useState('');
+  const [cityInput, setCityInput] = useState("");
   const [weather, setWeather] = useState(null);
   const [forecast, setForecast] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -13,81 +14,88 @@ export default function SearchScreen({ onBack }) {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    if (!cityInput) return;
+    if (!cityInput.trim()) return;
     setLoading(true);
     setError(null);
+    setWeather(null); // reset previous
+    setForecast([]);
+
     try {
+      const query = encodeURIComponent(cityInput.trim());
+
+      // fetch current weather
       const resp = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${cityInput}&units=metric&appid=${apiKey}`
+        `https://api.openweathermap.org/data/2.5/weather?q=${query}&units=metric&appid=${apiKey}`
       );
       if (!resp.ok) {
-        const err = await resp.json();
-        throw new Error(err.message || 'Error fetching weather');
+        const errJson = await resp.json();
+        throw new Error(errJson.message || "Error fetching weather");
       }
       const data = await resp.json();
       setWeather(data);
 
+      // fetch forecast
       const fcResp = await fetch(
-        `https://api.openweathermap.org/data/2.5/forecast?q=${cityInput}&units=metric&appid=${apiKey}`
+        `https://api.openweathermap.org/data/2.5/forecast?q=${query}&units=metric&appid=${apiKey}`
       );
       if (fcResp.ok) {
         const fcData = await fcResp.json();
         const daily = fcData.list.filter((item, idx) => idx % 8 === 0).slice(0, 5);
         setForecast(daily);
       } else {
-        console.warn('Forecast fetch failed during search:', fcResp.status);
+        console.warn("Forecast fetch failed during search:", fcResp.status);
       }
 
       setError(null);
     } catch (err) {
-      console.error('Error in SearchScreen handleSearch:', err);
-      setError('City not found or error fetching data');
-      setWeather(null);
+      console.error("Error in SearchScreen handleSearch:", err);
+      setError("City not found or error fetching data");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <button onClick={onBack}>Back</button>
+    <div className="app-container">
+      <div className="header">
+        <button className="search-button" onClick={onBack}>Back</button>
+      </div>
 
-      <form onSubmit={handleSearch} style={{ marginTop: '20px' }}>
+      <form onSubmit={handleSearch} className="input-group">
         <input
           type="text"
           placeholder="Enter city name"
           value={cityInput}
           onChange={(e) => setCityInput(e.target.value)}
-          style={{ padding: '10px', fontSize: '16px' }}
         />
-        <button type="submit" style={{ padding: '10px 20px', marginLeft: '10px' }}>
-          Search
-        </button>
+        <button type="submit">Search</button>
       </form>
 
-      {loading && <div style={{ marginTop: '20px' }}>Loading…</div>}
-      {error && <div style={{ marginTop: '20px', color: 'red' }}>{error}</div>}
+      {loading && <div className="loading-message">Loading…</div>}
+      {error && <div className="error-message">{error}</div>}
 
       {weather && (
-        <div style={{ marginTop: '30px', textAlign: 'center' }}>
-          <WeatherIcon condition={weather.weather[0].main} size={80} />
-          <div style={{ fontSize: '36px', margin: '10px 0' }}>
-            {Math.round(weather.main.temp)}°C
+        <div className="weather-card">
+          <div className="header" style={{ justifyContent: "center" }}>
+            <h1 className="city-name">{weather.name}</h1>
           </div>
-          <div>{weather.weather[0].description}</div>
-          <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: '20px' }}>
-            <div>Humidity: {weather.main.humidity}%</div>
-            <div>Wind: {weather.wind.speed} m/s</div>
+          <WeatherIcon condition={weather.weather[0].main} size={80} />
+          <div className="temperature">{Math.round(weather.main.temp)}°C</div>
+          <div className="condition">{weather.weather[0].description}</div>
+
+          <div className="details">
+            <div className="detail-item">Humidity: {weather.main.humidity}%</div>
+            <div className="detail-item">Wind: {weather.wind.speed} m/s</div>
           </div>
 
           {forecast.length > 0 && (
-            <div style={{ marginTop: '40px' }}>
-              <h2>5-Day Forecast</h2>
-              <div style={{ display: 'flex', overflowX: 'auto' }}>
+            <div className="forecast-container">
+              <h2 className="forecast-title">5-Day Forecast</h2>
+              <div className="forecast-cards">
                 {forecast.map((f, idx) => (
                   <ForecastCard
                     key={idx}
-                    date={new Date(f.dt * 1000).toLocaleDateString('en-US', { weekday: 'short' })}
+                    date={new Date(f.dt * 1000).toLocaleDateString("en-US", { weekday: "short" })}
                     min={f.main.temp_min}
                     max={f.main.temp_max}
                     condition={f.weather[0].main}

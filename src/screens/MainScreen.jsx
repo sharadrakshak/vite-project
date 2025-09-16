@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import WeatherIcon from '../Components/WeatherIcon';
 import ForecastCard from '../Components/ForecastCard';
+import "../Styles.css";
 
 const DEFAULT_CITY = 'Jaipur';
 
@@ -10,7 +11,7 @@ export default function MainScreen({ onSearch }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const apiKey = import.meta.env.VITE_OPENWEATHER_KEY;
+  const apiKey = import.meta.env.VITE_OPENWEATHER_KEY; 
 
   const fetchWeatherByCoords = async (lat, lon) => {
     try {
@@ -29,17 +30,14 @@ export default function MainScreen({ onSearch }) {
       );
       if (fcResp.ok) {
         const fcData = await fcResp.json();
-        // pick 5 forecasts at e.g. every 8 steps (3h increments in forecast data)
         const daily = fcData.list.filter((item, idx) => idx % 8 === 0).slice(0, 5);
         setForecast(daily);
       } else {
         console.warn('Forecast fetch by coords failed:', fcResp.status);
       }
-
       setError(null);
     } catch (err) {
       console.error('Error in fetchWeatherByCoords:', err);
-      // fallback
       fetchWeatherByCity(DEFAULT_CITY);
     } finally {
       setLoading(false);
@@ -68,7 +66,6 @@ export default function MainScreen({ onSearch }) {
       } else {
         console.warn('Forecast fetch by city failed:', fcResp.status);
       }
-
       setError(null);
     } catch (err) {
       console.error('Error in fetchWeatherByCity:', err);
@@ -89,8 +86,8 @@ export default function MainScreen({ onSearch }) {
         (pos) => {
           fetchWeatherByCoords(pos.coords.latitude, pos.coords.longitude);
         },
-        (geoErr) => {
-          console.warn('Geolocation error:', geoErr);
+        (Err) => {
+          console.warn('Geolocation error:', Err);
           fetchWeatherByCity(DEFAULT_CITY);
         },
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
@@ -98,39 +95,37 @@ export default function MainScreen({ onSearch }) {
     } else {
       fetchWeatherByCity(DEFAULT_CITY);
     }
-  }, [apiKey]);
+  }, []);
 
   if (loading) {
-    return <div>Loading weather...</div>;
+    return <div className="loading-message">Loading weather...</div>;
   }
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
+    <div className="app-container">
+      {error && <div className="error-message">{error}</div>}
       {weather && (
         <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <h1>{weather.name}</h1>
-            <button onClick={onSearch}>Search City</button>
+          <div className="header">
+            <h1 className="city-name">{weather.name}</h1>
+            <button className="search-button" onClick={onSearch}>Search City</button>
           </div>
-          <div style={{ textAlign: 'center', marginTop: '30px' }}>
+
+          <div className="weather-card">
             <WeatherIcon condition={weather.weather[0].main} size={100} />
-            <div style={{ fontSize: '48px', margin: '10px 0' }}>
-              {Math.round(weather.main.temp)}°C
-            </div>
-            <div style={{ fontSize: '24px' }}>
-              {weather.weather[0].description}
-            </div>
-            <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-around' }}>
-              <div>Humidity: {weather.main.humidity}%</div>
-              <div>Wind: {weather.wind.speed} m/s</div>
+            <div className="temperature">{Math.round(weather.main.temp)}°C</div>
+            <div className="condition">{weather.weather[0].description}</div>
+
+            <div className="details">
+              <div className="detail-item">Humidity: {weather.main.humidity}%</div>
+              <div className="detail-item">Wind: {weather.wind.speed} m/s</div>
             </div>
           </div>
 
           {forecast.length > 0 && (
-            <div style={{ marginTop: '40px' }}>
-              <h2>5-Day Forecast</h2>
-              <div style={{ display: 'flex', overflowX: 'auto' }}>
+            <div className="forecast-container">
+              <h2 className="forecast-title">5-Day Forecast</h2>
+              <div className="forecast-cards">
                 {forecast.map((f, idx) => (
                   <ForecastCard
                     key={idx}
@@ -146,10 +141,9 @@ export default function MainScreen({ onSearch }) {
         </div>
       )}
 
-      {!weather && (
-        <div>
+      {!weather && !error && (
+        <div className="error-message">
           <h1>Weather not available</h1>
-          <p>Showing default city: {DEFAULT_CITY}</p>
         </div>
       )}
     </div>

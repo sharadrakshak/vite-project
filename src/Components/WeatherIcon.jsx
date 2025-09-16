@@ -1,5 +1,6 @@
-// maps weather condition main to an icon (you can replace with images later)
+ 
 import React from 'react';
+import '../Styles.css';
 
 const iconMap = {
   Clear: '☀️',
@@ -17,7 +18,7 @@ const iconMap = {
 export default function WeatherIcon({ condition, size = 80 }) {
   const icon = iconMap[condition] || '❓';
   return (
-    <div style={{ fontSize: size }}>
+    <div className="weather-icon-emoji" style={{ fontSize: size }}>
       {icon}
     </div>
   );
