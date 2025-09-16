@@ -9,14 +9,14 @@ const iconMap = {
   Drizzle: '🌦️',
   Snow: '❄️',
   Thunderstorm: '⛈️',
-  Haze: '🌫️',
+  Haze: '🌫',
   Mist: '🌫️',
   Smoke: '🌫️',
   // etc.
 };
 
 export default function WeatherIcon({ condition, size = 80 }) {
-  const icon = iconMap[condition] || '❓';
+  const icon = iconMap[condition];
   return (
     <div className="weather-icon-emoji" style={{ fontSize: size }}>
       {icon}
