@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import WeatherIcon from '../Components/WeatherIcon';
-import ForecastCard from '../Components/ForecastCard';
+import React, { useEffect, useState } from "react";
+import WeatherIcon from "../Components/WeatherIcon";
+import ForecastCard from "../Components/ForecastCard";
 import "../Styles.css";
 
-const DEFAULT_CITY = 'Jaipur';
+const DEFAULT_CITY = "Jaipur";
 
 export default function MainScreen({ onSearch }) {
   const [weather, setWeather] = useState(null);
@@ -11,7 +11,7 @@ export default function MainScreen({ onSearch }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const apiKey = import.meta.env.VITE_OPENWEATHER_KEY; 
+  const apiKey = import.meta.env.VITE_OPENWEATHER_KEY;
 
   const fetchWeatherByCoords = async (lat, lon) => {
     try {
@@ -20,7 +20,7 @@ export default function MainScreen({ onSearch }) {
       );
       if (!resp.ok) {
         const err = await resp.json();
-        throw new Error(err.message || 'Error fetching weather by coords');
+        throw new Error(err.message || "Error fetching weather by coords");
       }
       const data = await resp.json();
       setWeather(data);
@@ -30,14 +30,16 @@ export default function MainScreen({ onSearch }) {
       );
       if (fcResp.ok) {
         const fcData = await fcResp.json();
-        const daily = fcData.list.filter((item, idx) => idx % 8 === 0).slice(0, 5);
+        const daily = fcData.list
+          .filter((item, idx) => idx % 8 === 0)
+          .slice(0, 5);
         setForecast(daily);
       } else {
-        console.warn('Forecast fetch by coords failed:', fcResp.status);
+        console.warn("Forecast fetch by coords failed:", fcResp.status);
       }
       setError(null);
     } catch (err) {
-      console.error('Error in fetchWeatherByCoords:', err);
+      console.error("Error in fetchWeatherByCoords:", err);
       fetchWeatherByCity(DEFAULT_CITY);
     } finally {
       setLoading(false);
@@ -51,7 +53,7 @@ export default function MainScreen({ onSearch }) {
       );
       if (!resp.ok) {
         const err = await resp.json();
-        throw new Error(err.message || 'Error fetching weather by city');
+        throw new Error(err.message || "Error fetching weather by city");
       }
       const data = await resp.json();
       setWeather(data);
@@ -61,15 +63,17 @@ export default function MainScreen({ onSearch }) {
       );
       if (fcResp.ok) {
         const fcData = await fcResp.json();
-        const daily = fcData.list.filter((item, idx) => idx % 8 === 0).slice(0, 5);
+        const daily = fcData.list
+          .filter((item, idx) => idx % 8 === 0)
+          .slice(0, 5);
         setForecast(daily);
       } else {
-        console.warn('Forecast fetch by city failed:', fcResp.status);
+        console.warn("Forecast fetch by city failed:", fcResp.status);
       }
       setError(null);
     } catch (err) {
-      console.error('Error in fetchWeatherByCity:', err);
-      setError('Could not fetch weather data right now.');
+      console.error("Error in fetchWeatherByCity:", err);
+      setError("Could not fetch weather data right now.");
     } finally {
       setLoading(false);
     }
@@ -77,7 +81,7 @@ export default function MainScreen({ onSearch }) {
 
   useEffect(() => {
     if (!apiKey) {
-      setError('API Key is missing');
+      setError("API Key is missing");
       setLoading(false);
       return;
     }
@@ -87,7 +91,7 @@ export default function MainScreen({ onSearch }) {
           fetchWeatherByCoords(pos.coords.latitude, pos.coords.longitude);
         },
         (Err) => {
-          console.warn('Geolocation error:', Err);
+          console.warn("Geolocation error:", Err);
           fetchWeatherByCity(DEFAULT_CITY);
         },
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
@@ -100,6 +104,7 @@ export default function MainScreen({ onSearch }) {
   if (loading) {
     return <div className="loading-message">Loading weather...</div>;
   }
+  const iconUrl = `https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`;
 
   return (
     <div className="app-container">
@@ -108,16 +113,26 @@ export default function MainScreen({ onSearch }) {
         <div>
           <div className="header">
             <h1 className="city-name">{weather.name}</h1>
-            <button className="search-button" onClick={onSearch}>Search City</button>
+            <button className="search-button" onClick={onSearch}>
+              Search City
+            </button>
           </div>
 
           <div className="weather-card">
-            <WeatherIcon condition={weather.weather[0].main} size={100} />
+            {console.log(weather)}
+            {/* <WeatherIcon condition={weather.weather[0].main} size={100} />
+             */}
+            <img
+              src={iconUrl}
+              alt={""} 
+            />
             <div className="temperature">{Math.round(weather.main.temp)}°C</div>
             <div className="condition">{weather.weather[0].description}</div>
 
             <div className="details">
-              <div className="detail-item">Humidity: {weather.main.humidity}%</div>
+              <div className="detail-item">
+                Humidity: {weather.main.humidity}%
+              </div>
               <div className="detail-item">Wind: {weather.wind.speed} m/s</div>
             </div>
           </div>
@@ -129,7 +144,9 @@ export default function MainScreen({ onSearch }) {
                 {forecast.map((f, idx) => (
                   <ForecastCard
                     key={idx}
-                    date={new Date(f.dt * 1000).toLocaleDateString('en-US', { weekday: 'short' })}
+                    date={new Date(f.dt * 1000).toLocaleDateString("en-US", {
+                      weekday: "short",
+                    })}
                     min={f.main.temp_min}
                     max={f.main.temp_max}
                     condition={f.weather[0].main}

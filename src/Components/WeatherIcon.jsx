@@ -15,7 +15,7 @@ const iconMap = {
   // etc.
 };
 
-export default function WeatherIcon({ condition, size = 80 }) {
+export default function WeatherIcon({ condition, size }) {
   const icon = iconMap[condition];
   return (
     <div className="weather-icon-emoji" style={{ fontSize: size }}>

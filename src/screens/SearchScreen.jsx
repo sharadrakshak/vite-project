@@ -17,7 +17,7 @@ export default function SearchScreen({ onBack }) {
     if (!cityInput.trim()) return;
     setLoading(true);
     setError(null);
-    setWeather(null); // reset previous
+    // setWeather(null); // reset previous
     setForecast([]);
 
     try {
@@ -54,6 +54,8 @@ export default function SearchScreen({ onBack }) {
       setLoading(false);
     }
   };
+   const iconUrl = `https://openweathermap.org/img/wn/${weather?.weather[0].icon}@2x.png`;
+    
 
   return (
     <div className="app-container">
@@ -79,7 +81,11 @@ export default function SearchScreen({ onBack }) {
           <div className="header" style={{ justifyContent: "center" }}>
             <h1 className="city-name">{weather.name}</h1>
           </div>
-          <WeatherIcon condition={weather.weather[0].main} size={80} />
+          {/* <WeatherIcon condition={weather.weather[0].main} size={80} /> */}
+          <img
+              src={iconUrl}
+              alt={""} 
+            />
           <div className="temperature">{Math.round(weather.main.temp)}°C</div>
           <div className="condition">{weather.weather[0].description}</div>
 
