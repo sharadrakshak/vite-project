@@ -106,63 +106,66 @@ export default function MainScreen({ onSearch }) {
   }
   const iconUrl = `https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`;
 
-  return (
-    <div className="app-container">
-      {error && <div className="error-message">{error}</div>}
-      {weather && (
-        <div>
-          <div className="header">
-            <h1 className="city-name">{weather.name}</h1>
-            <button className="search-button" onClick={onSearch}>
-              Search City
-            </button>
-          </div>
-
-          <div className="weather-card">
-            {console.log(weather)}
-            {/* <WeatherIcon condition={weather.weather[0].main} size={100} />
-             */}
-            <img
-              src={iconUrl}
-              alt={""} 
-            />
-            <div className="temperature">{Math.round(weather.main.temp)}°C</div>
-            <div className="condition">{weather.weather[0].description}</div>
-
-            <div className="details">
-              <div className="detail-item">
-                Humidity: {weather.main.humidity}%
-              </div>
-              <div className="detail-item">Wind: {weather.wind.speed} m/s</div>
+  return ( 
+    <>
+      <img className="background-image" src="/4.png" alt="background" /> 
+      <div className="app-container">
+        {error && <div className="error-message">{error}</div>}
+        {weather && (
+          <div> 
+            <div className="weather-card"> 
+              <div className="header">
+              <h1 className="city-name">{weather.name}</h1>
+              <button className="search-button" onClick={onSearch}>
+                Search City
+              </button>
             </div>
-          </div>
-
-          {forecast.length > 0 && (
-            <div className="forecast-container">
-              <h2 className="forecast-title">5-Day Forecast</h2>
-              <div className="forecast-cards">
-                {forecast.map((f, idx) => (
-                  <ForecastCard
-                    key={idx}
-                    date={new Date(f.dt * 1000).toLocaleDateString("en-US", {
-                      weekday: "short",
-                    })}
-                    min={f.main.temp_min}
-                    max={f.main.temp_max}
-                    condition={f.weather[0].main}
-                  />
-                ))}
+              {console.log(weather)}
+              {/* <WeatherIcon condition={weather.weather[0].main} size={100} />
+               */}
+              <img src={iconUrl} alt={""} />
+              <div className="temperature">
+                {Math.round(weather.main.temp)}°C
               </div>
-            </div>
-          )}
-        </div>
-      )}
+              <div className="condition">{weather.weather[0].description}</div>
 
-      {!weather && !error && (
-        <div className="error-message">
-          <h1>Weather not available</h1>
+              <div className="details">
+                <div className="detail-item">
+                  Humidity: {weather.main.humidity}%
+                </div>
+                <div className="detail-item">
+                  Wind: {weather.wind.speed} m/s
+                </div>
+              </div>
+              {forecast.length > 0 && (
+              <div className="forecast-container"> 
+                <div className="forecast-cards">
+                  {forecast.map((f, idx) => (
+                    <ForecastCard
+                      key={idx}
+                      date={new Date(f.dt * 1000).toLocaleDateString("en-US", {
+                        weekday: "short",
+                      })}
+                      min={f.main.temp_min}
+                      max={f.main.temp_max}
+                      condition={f.weather[0].main}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+            </div>
+
+            
+          </div>
+        )}
+
+        {!weather && !error && (
+          <div className="error-message">
+            <h1>Weather not available</h1>
+          </div>
+        )} 
         </div>
-      )}
-    </div>
+        </>
   );
 }

@@ -1,17 +1,16 @@
-
-*{
+* {
   margin: 0;
   padding: 0;
 }
 
-:root { 
+:root {
   --bg-gradient-start: #4facfe;
   --bg-gradient-end: #00f2fe;
   --card-bg: rgba(255, 255, 255, 0.15);
   --card-bg-light: rgba(255, 255, 255, 0.8);
   --text-main: #1d364f;
   --text-secondary: #000000;
-  --text-error: #ff6b6b;
+  --text-error: #ff0000;
   --button-bg: rgb(86 201 254);
   --button-bg-hover: rgba(255, 255, 255, 0.5);
   --button-text: #0c1621;
@@ -32,7 +31,8 @@ body {
 
 .app-container {
   max-width: 480px;
-  margin: 25px auto;
+  /* margin: 25px auto; */
+  margin: auto;
   padding: 20px;
 }
 
@@ -40,6 +40,12 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.search-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 15px;
 }
 
 .city-name {
@@ -64,16 +70,17 @@ body {
 }
 
 .weather-card {
-  background-color: var(--card-bg);
+  /* background-color: var(--card-bg); */
+  backdrop-filter: blur(25px);
   border-radius: 16px;
   box-shadow: 0 6px 20px var(--shadow-color);
-  padding: 30px 20px;
-  margin-top: 30px;
+  padding: 25px 20px;
+  /* margin-top: 30px; */
   text-align: center;
 }
 
 .temperature {
-  font-size: 4rem;
+  font-size: 2rem;
   margin: 10px 0;
 }
 
@@ -107,7 +114,7 @@ body {
   display: flex;
   justify-content: center;
   /* overflow-x: hidden; */
-  gap: 12px;
+  gap: 7px;
   padding-bottom: 10px;
   flex-wrap: wrap;
   flex-direction: row;
@@ -128,7 +135,7 @@ body {
 .input-group {
   display: flex;
   justify-content: center;
-  margin-top: 30px;
+  margin-top: 5px;
 }
 
 .input-group input {
@@ -138,6 +145,14 @@ body {
   border-radius: 8px;
   width: 70%;
   max-width: 250px;
+}
+input {
+  /* text-decoration: none; */
+  outline: none;
+  backdrop-filter: blur(8px);
+}
+.input-group input::placeholder {
+  color: black;
 }
 
 .input-group button {
@@ -168,9 +183,9 @@ body {
   text-align: center;
 }
 
-.forecast-card { 
-  min-width: 100px;
-  margin: 0 5px;
+.forecast-card {
+  min-width: 62px;
+  /* margin: 0 5px; */
   padding: 10px;
   border-radius: 8px;
   background-color: var(
@@ -225,4 +240,34 @@ body {
   justify-content: center;
   align-items: center;
   /* color, margin adjustments etc */
+}
+
+.background-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -1;
+  pointer-events: none; /* So it doesn't interfere with clicks */
+}
+
+.app-container {
+  position: relative; /* Ensure content sits above background */
+  z-index: 1;
+  padding: 20px;
+}
+.search-weather-card{
+/* background-color: var(--card-bg); */
+  backdrop-filter: blur(25px);
+  border-radius: 16px;
+  box-shadow: 0 6px 20px var(--shadow-color);
+  padding: 18px 20px;
+  margin-top: 15px;
+  text-align: center;
+}
+.back-btn{
+  font-family: fantasy;
+  font-weight: 400;
 }

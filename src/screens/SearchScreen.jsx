@@ -17,7 +17,7 @@ export default function SearchScreen({ onBack }) {
     if (!cityInput.trim()) return;
     setLoading(true);
     setError(null);
-    // setWeather(null); // reset previous
+    setWeather(null); // reset previous
     setForecast([]);
 
     try {
@@ -49,7 +49,7 @@ export default function SearchScreen({ onBack }) {
       setError(null);
     } catch (err) {
       console.error("Error in SearchScreen handleSearch:", err);
-      setError("City not found or error fetching data");
+      setError("City not found");
     } finally {
       setLoading(false);
     }
@@ -58,26 +58,30 @@ export default function SearchScreen({ onBack }) {
     
 
   return (
+    <>
+    <img className="background-image" src="/4.png" alt="background" /> 
     <div className="app-container">
-      <div className="header">
-        <button className="search-button" onClick={onBack}>Back</button>
-      </div>
+      <div className="search-header"> 
+        <button className="search-button back-btn" onClick={onBack}>←</button>
+       
 
       <form onSubmit={handleSearch} className="input-group">
         <input
           type="text"
           placeholder="Enter city name"
           value={cityInput}
-          onChange={(e) => setCityInput(e.target.value)}
-        />
+          onChange={(e) => setCityInput(e.target.value)} 
+          required
+          />
         <button type="submit">Search</button>
       </form>
+      </div>
 
       {loading && <div className="loading-message">Loading…</div>}
       {error && <div className="error-message">{error}</div>}
 
       {weather && (
-        <div className="weather-card">
+        <div className="search-weather-card">
           <div className="header" style={{ justifyContent: "center" }}>
             <h1 className="city-name">{weather.name}</h1>
           </div>
@@ -95,8 +99,7 @@ export default function SearchScreen({ onBack }) {
           </div>
 
           {forecast.length > 0 && (
-            <div className="forecast-container">
-              <h2 className="forecast-title">5-Day Forecast</h2>
+            <div className="forecast-container"> 
               <div className="forecast-cards">
                 {forecast.map((f, idx) => (
                   <ForecastCard
@@ -113,5 +116,6 @@ export default function SearchScreen({ onBack }) {
         </div>
       )}
     </div>
+          </>
   );
 }
