@@ -6,6 +6,13 @@ import "../Styles.css";
 const DEFAULT_CITY = "Jaipur";
 
 export default function MainScreen({ onSearch }) {
+
+
+
+  const [size, setSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight
+  });
   const [weather, setWeather] = useState(null);
   const [forecast, setForecast] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -99,28 +106,38 @@ export default function MainScreen({ onSearch }) {
     } else {
       fetchWeatherByCity(DEFAULT_CITY);
     }
+
+    window.addEventListener('resize', ()=>{
+      setSize({
+        width: window.innerWidth,
+        height: window.innerHeight
+      })
+    });
   }, []);
 
   if (loading) {
     return <div className="loading-message">Loading weather...</div>;
   }
   const iconUrl = `https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`;
-
-  return ( 
+//  console.log(first)
+  
+  return (
     <>
-      <img className="background-image" src="/4.png" alt="background" /> 
+      <div className="background-wrapper">
+        {console.log(weather.weather[0])}
+         <img className="background-image" src={`./${weather.weather[0].main}.png`} alt="background" /> 
+      </div>
       <div className="app-container">
         {error && <div className="error-message">{error}</div>}
         {weather && (
-          <div> 
-            <div className="weather-card"> 
+          <div>
+            <div className="weather-card">
               <div className="header">
-              <h1 className="city-name">{weather.name}</h1>
-              <button className="search-button" onClick={onSearch}>
-                Search City
-              </button>
-            </div>
-              {console.log(weather)}
+                <h1 className="city-name">{weather.name}</h1>
+                <button className="search-button" onClick={onSearch}>
+                  Search City
+                </button>
+              </div> 
               {/* <WeatherIcon condition={weather.weather[0].main} size={100} />
                */}
               <img src={iconUrl} alt={""} />
@@ -138,25 +155,26 @@ export default function MainScreen({ onSearch }) {
                 </div>
               </div>
               {forecast.length > 0 && (
-              <div className="forecast-container"> 
-                <div className="forecast-cards">
-                  {forecast.map((f, idx) => (
-                    <ForecastCard
-                      key={idx}
-                      date={new Date(f.dt * 1000).toLocaleDateString("en-US", {
-                        weekday: "short",
-                      })}
-                      min={f.main.temp_min}
-                      max={f.main.temp_max}
-                      condition={f.weather[0].main}
-                    />
-                  ))}
+                <div className="forecast-container">
+                  <div className="forecast-cards">
+                    {forecast.map((f, idx) => (
+                      <ForecastCard
+                        key={idx}
+                        date={new Date(f.dt * 1000).toLocaleDateString(
+                          "en-US",
+                          {
+                            weekday: "short",
+                          }
+                        )}
+                        min={f.main.temp_min}
+                        max={f.main.temp_max}
+                        condition={f.weather[0].main}
+                      />
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
             </div>
-
-            
           </div>
         )}
 
@@ -164,8 +182,8 @@ export default function MainScreen({ onSearch }) {
           <div className="error-message">
             <h1>Weather not available</h1>
           </div>
-        )} 
-        </div>
-        </>
+        )}
+      </div>
+    </>
   );
 }

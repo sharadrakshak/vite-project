@@ -57,9 +57,10 @@ export default function SearchScreen({ onBack }) {
    const iconUrl = `https://openweathermap.org/img/wn/${weather?.weather[0].icon}@2x.png`;
     
 
+   {console.log(weather?.weather[0])}
   return (
     <>
-    <img className="background-image" src="/4.png" alt="background" /> 
+    <img className="background-image" src={`./${weather?.weather[0].main}.png`} /> 
     <div className="app-container">
       <div className="search-header"> 
         <button className="search-button back-btn" onClick={onBack}>←</button>
