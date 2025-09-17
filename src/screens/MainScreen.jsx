@@ -116,7 +116,7 @@ export default function MainScreen({ onSearch }) {
   }, []);
 
   if (loading) {
-    return <div className="loading-message">Loading weather...</div>;
+    return <div className="loading-message"><h1>Loading weather...</h1></div>;
   }
   const iconUrl = `https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`;
 //  console.log(first)

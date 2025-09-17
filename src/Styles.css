@@ -10,10 +10,10 @@
   --card-bg-light: rgba(255, 255, 255, 0.8);
   --text-main: #1d364f;
   --text-secondary: #000000;
-  --text-error: #ff0000;
+  --text-error: #bb2525;
   --button-bg: rgb(86 201 254);
   --button-bg-hover: rgba(255, 255, 255, 0.5);
-  --button-text: #0c1621;
+  --button-text: #000000;
   --shadow-color: rgba(0, 0, 0, 0.3);
 }
 
@@ -63,6 +63,7 @@ body {
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  background: transparent;
 }
 
 .search-button:hover {
@@ -166,6 +167,7 @@ input {
   cursor: pointer;
   transition: background-color 0.3s ease;
   box-shadow: 0 2px 7px var(--shadow-color);
+  background: transparent;
 }
 
 .input-group button:hover {
