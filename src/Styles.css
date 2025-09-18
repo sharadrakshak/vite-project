@@ -30,8 +30,7 @@ body {
 }
 
 .app-container {
-  max-width: 480px;
-  /* margin: 25px auto; */
+  max-width: 480px; 
   margin: auto;
   padding: 20px;
 }

@@ -6,16 +6,14 @@ import "../Styles.css";
 const DEFAULT_CITY = "Jaipur";
 
 export default function MainScreen({ onSearch }) {
-
-
-
   const [size, setSize] = useState({
     width: window.innerWidth,
-    height: window.innerHeight
+    height: window.innerHeight,
   });
   const [weather, setWeather] = useState(null);
   const [forecast, setForecast] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [locationDetected, setLocationDetected] = useState(false); 
   const [error, setError] = useState(null);
 
   const apiKey = import.meta.env.VITE_OPENWEATHER_KEY;
@@ -30,8 +28,7 @@ export default function MainScreen({ onSearch }) {
         throw new Error(err.message || "Error fetching weather by coords");
       }
       const data = await resp.json();
-      setWeather(data);
-
+      setWeather(data);  
       const fcResp = await fetch(
         `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`
       );
@@ -40,7 +37,7 @@ export default function MainScreen({ onSearch }) {
         const daily = fcData.list
           .filter((item, idx) => idx % 8 === 0)
           .slice(0, 5);
-        setForecast(daily);
+        setForecast(daily); 
       } else {
         console.warn("Forecast fetch by coords failed:", fcResp.status);
       }
@@ -85,7 +82,18 @@ export default function MainScreen({ onSearch }) {
       setLoading(false);
     }
   };
-
+useEffect(() => {
+    let timerId;
+    if (locationDetected) {
+      // setLocationDetected(true) was called earlier
+      timerId = setTimeout(() => {
+        setLocationDetected(false);
+      }, 500);
+    }
+    return () => {
+      if (timerId) clearTimeout(timerId);
+    };
+  }, [locationDetected]);
   useEffect(() => {
     if (!apiKey) {
       setError("API Key is missing");
@@ -94,11 +102,14 @@ export default function MainScreen({ onSearch }) {
     }
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          fetchWeatherByCoords(pos.coords.latitude, pos.coords.longitude);
+        (pos) => { 
+          setLocationDetected(true);
+          fetchWeatherByCoords(pos.coords.latitude, pos.coords.longitude);  
+          
         },
         (Err) => {
           console.warn("Geolocation error:", Err);
+
           fetchWeatherByCity(DEFAULT_CITY);
         },
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
@@ -106,26 +117,34 @@ export default function MainScreen({ onSearch }) {
     } else {
       fetchWeatherByCity(DEFAULT_CITY);
     }
-
-    window.addEventListener('resize', ()=>{
-      setSize({
-        width: window.innerWidth,
-        height: window.innerHeight
-      })
-    });
   }, []);
 
   if (loading) {
-    return <div className="loading-message"><h1>Loading weather...</h1></div>;
+    return (
+      <div className="loading-message">
+        <h1>Loading weather...</h1>
+      </div>
+    );
+  }  
+  if (locationDetected) {
+    return (
+      <div className="loading-message">
+        <h1>Location detected...</h1>
+      </div>
+    );
   }
-  const iconUrl = `https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`;
-//  console.log(first)
-  
+
+  const iconUrl = `https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`; 
+
   return (
     <>
       <div className="background-wrapper">
         {console.log(weather.weather[0])}
-         <img className="background-image" src={`./${weather.weather[0].main}.png`} alt="background" /> 
+        <img
+          className="background-image"
+          src={`./${weather.weather[0].main}.png`}
+          alt="background"
+        />
       </div>
       <div className="app-container">
         {error && <div className="error-message">{error}</div>}
@@ -137,9 +156,9 @@ export default function MainScreen({ onSearch }) {
                 <button className="search-button" onClick={onSearch}>
                   Search City
                 </button>
-              </div> 
-              {/* <WeatherIcon condition={weather.weather[0].main} size={100} />
-               */}
+              </div>
+              {/* <WeatherIcon condition={weather.weather[0].main} size={100} /> */}
+
               <img src={iconUrl} alt={""} />
               <div className="temperature">
                 {Math.round(weather.main.temp)}°C
