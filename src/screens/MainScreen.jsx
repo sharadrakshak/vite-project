@@ -5,16 +5,11 @@ import "../Styles.css";
 
 const DEFAULT_CITY = "Jaipur";
 
-export default function MainScreen({ onSearch }) {
-  const [size, setSize] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
+export default function MainScreen({ onSearch }) { 
   const [weather, setWeather] = useState(null);
   const [forecast, setForecast] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [locationDetected, setLocationDetected] = useState(false); 
-  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null); 
 
   const apiKey = import.meta.env.VITE_OPENWEATHER_KEY;
 
@@ -81,31 +76,17 @@ export default function MainScreen({ onSearch }) {
     } finally {
       setLoading(false);
     }
-  };
-useEffect(() => {
-    let timerId;
-    if (locationDetected) {
-      // setLocationDetected(true) was called earlier
-      timerId = setTimeout(() => {
-        setLocationDetected(false);
-      }, 500);
-    }
-    return () => {
-      if (timerId) clearTimeout(timerId);
-    };
-  }, [locationDetected]);
+  }; 
   useEffect(() => {
     if (!apiKey) {
       setError("API Key is missing");
       setLoading(false);
       return;
     }
-    if ("geolocation" in navigator) {
+    if ("geolocation" in navigator) { 
       navigator.geolocation.getCurrentPosition(
-        (pos) => { 
-          setLocationDetected(true);
+        (pos) => {  
           fetchWeatherByCoords(pos.coords.latitude, pos.coords.longitude);  
-          
         },
         (Err) => {
           console.warn("Geolocation error:", Err);
@@ -125,21 +106,13 @@ useEffect(() => {
         <h1>Loading weather...</h1>
       </div>
     );
-  }  
-  if (locationDetected) {
-    return (
-      <div className="loading-message">
-        <h1>Location detected...</h1>
-      </div>
-    );
-  }
+  }   
 
   const iconUrl = `https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`; 
 
   return (
     <>
-      <div className="background-wrapper">
-        {console.log(weather.weather[0])}
+      <div className="background-wrapper"> 
         <img
           className="background-image"
           src={`./${weather.weather[0].main}.png`}
